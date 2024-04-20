@@ -1,6 +1,5 @@
 package com.ecommerce.javaspring.ecom.utils;
 
-import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -8,6 +7,7 @@ import java.util.function.Function;
 
 import javax.crypto.SecretKey;
 
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.Claims;
@@ -17,9 +17,9 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 
 @Component
-public class JwtUtili {
+public class JwtUtil {
 
-	public transient static final String SECRET = "692C00B4E4B2FEFF30C2C8D14F821488F66D14D50CB8736E80AF9CC2F53DAF3A";
+	public transient static final String SECRET = "3EBBCF4FF5CEC27AB8C7D8A61D9F0FA038E462D6E5E13CE2B9C3C493A1D19C9C";
 
 	public String generateToken(String userName) {
 		Map<String, Object> claims = new HashMap<>();
@@ -48,5 +48,18 @@ public class JwtUtili {
 
 	private Claims extractAllClaims(String token) {
 		return Jwts.parserBuilder().setSigningKey(getSignKey()).build().parseClaimsJws(token).getBody();
+	}
+	
+	public Boolean isTokenExpired(String token) {
+		return extractExpiration(token).before(new Date());
+	}
+	
+	public Date extractExpiration(String token) {
+		return extractClaim(token, Claims::getExpiration);
+	}
+	
+	public Boolean validateToken(String token, UserDetails userDetails) {
+		final String userName = extractUsername(token);
+		return (userName.equals(userDetails.getUsername()) && !isTokenExpired(token));
 	}
 }
