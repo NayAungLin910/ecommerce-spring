@@ -28,15 +28,20 @@ import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
 public class AuthController {
-	private final AuthenticationManager authenticationManger = null;
+	private final AuthenticationManager authenticationManger;
+    private final UserDetailsService userDetailsService;
+    private final UserRepository userRepository;
+    private final JwtUtil jwtUtil;
+    private final AuthService authService;
 
-	private final UserDetailsService userDetailsService = null;
-
-	private final UserRepository userRepository = null;
-
-	private final JwtUtil jwtUtil = null;
-	
-	private final AuthService authService = null;
+    public AuthController(AuthenticationManager authenticationManager, UserDetailsService userDetailsService,
+                          UserRepository userRepository, JwtUtil jwtUtil, AuthService authService) {
+        this.authenticationManger = authenticationManager;
+        this.userDetailsService = userDetailsService;
+        this.userRepository = userRepository;
+        this.jwtUtil = jwtUtil;
+        this.authService = authService;
+    }
 
 	public static final String TOKEN_PREFIX = "Bearer ";
 	public static final String HEADER_STRING = "Authorization";

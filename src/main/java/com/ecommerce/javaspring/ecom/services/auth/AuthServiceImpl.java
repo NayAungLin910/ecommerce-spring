@@ -15,11 +15,14 @@ import jakarta.annotation.PostConstruct;
 @Service
 public class AuthServiceImpl implements AuthService {
 
-	@Autowired
-	private UserRepository userRepository;
+	private final UserRepository userRepository;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-	@Autowired
-	private BCryptPasswordEncoder bCryptPasswordEncoder;
+    @Autowired
+    public AuthServiceImpl(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
+        this.userRepository = userRepository;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+    }
 
 	public UserDto createUser(SignupRequest signupRequest) {
 

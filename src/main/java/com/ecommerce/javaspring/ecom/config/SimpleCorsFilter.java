@@ -9,6 +9,8 @@ import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -20,6 +22,8 @@ import jakarta.servlet.http.HttpServletResponse;
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class SimpleCorsFilter implements Filter {
+	
+	private static final Logger logger = LoggerFactory.getLogger(SimpleCorsFilter.class);
 
 	@Value("${app.client.url}")
 	private String clientAppUrl = "";
@@ -32,8 +36,13 @@ public class SimpleCorsFilter implements Filter {
 
 		HttpServletResponse response = (HttpServletResponse) res;
 		HttpServletRequest request = (HttpServletRequest) req;
-		Map<String, String> map = new HashMap<>();
+		
+		logger.info("Incoming request: {}", request.getRequestURI());
+
 		String originHeader = request.getHeader("origin");
+		
+		logger.info("Origin header: {}", originHeader);
+		
 		response.setHeader("Access-Control-Allow-Origin", originHeader);
 		response.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT, OPTIONS, DELETE");
 		response.setHeader("Access-Control-Max-Age", "3600");
